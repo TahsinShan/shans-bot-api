@@ -1,13 +1,16 @@
 export default async function handler(req, res) {
-  // ✅ Allow CORS
+  // ✅ Allow requests from your GitHub Pages domain
   res.setHeader('Access-Control-Allow-Origin', 'https://tahsinhshan.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // ✅ Handle preflight requests
+  // ✅ Handle preflight CORS request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
+
+  // (the rest of your code continues below...)
+
 
   // 🚨 Only allow POST requests
   if (req.method !== 'POST') {
