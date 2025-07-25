@@ -1,4 +1,7 @@
 export default async function handler(req, res) {
+  // 🔥 This is required for GitHub Pages to talk to Vercel API
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST requests allowed' });
   }
