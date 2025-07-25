@@ -1,15 +1,15 @@
 export default async function handler(req, res) {
-  // ✅ Set CORS headers for all responses (OPTIONS, errors, POST)
+  // ✅ Allow CORS
   res.setHeader('Access-Control-Allow-Origin', 'https://tahsinshan.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // ✅ Handle preflight OPTIONS request
+  // ✅ Handle preflight request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // 🚫 Reject non-POST
+  // ❌ Allow only POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST requests allowed' });
   }
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'openai/gpt-3.5-turbo',
         messages: [
-          { role: 'system', content: 'You are a helpful assistant for Shan\'s personal website chatbot.' },
+          { role: 'system', content: "You are a helpful assistant for Shan's personal website chatbot." },
           { role: 'user', content: userMessage }
         ]
       })
@@ -44,14 +44,14 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("❌ OpenRouter error:", data);
+      console.error('❌ OpenRouter error:', data);
       return res.status(500).json({ error: data.error || 'Something went wrong with OpenRouter' });
     }
 
     return res.status(200).json({ reply: data.choices?.[0]?.message?.content || 'No response' });
 
   } catch (error) {
-    console.error("❌ Server error:", error);
+    console.error('❌ Server error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
