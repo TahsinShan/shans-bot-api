@@ -24,27 +24,23 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'openai/gpt-3.5-turbo',
         messages: [
-          {
-            role: 'system',
-            content: "You are Rollie, Shan's helpful website assistant. Keep replies short, friendly, and helpful."
-          },
-          {
-            role: 'user',
-            content: userMessage
-          }
+          { role: 'system', content: 'You are a helpful assistant for Shan\'s personal website chatbot.' },
+          { role: 'user', content: userMessage }
         ]
       })
     });
 
     const data = await response.json();
 
-    if (data?.choices?.[0]?.message?.content) {
-      res.status(200).json({ reply: data.choices[0].message.content });
-    } else {
-      res.status(500).json({ error: 'Invalid response from OpenRouter.' });
+    if (!response.ok) {
+      console.error("❌ OpenRouter error:", data);
+      return res.status(500).json({ error: data.error || 'Something went wrong with OpenRouter' });
     }
+
+    return res.status(200).json({ message: data.choices?.[0]?.message?.content || 'No response' });
+
   } catch (error) {
-    console.error("❌ Fetch failed:", error);
-    res.status(500).json({ error: 'Server error: Failed to get reply' });
+    console.error("❌ Server error:", error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
