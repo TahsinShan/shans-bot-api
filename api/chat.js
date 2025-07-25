@@ -1,18 +1,13 @@
 export default async function handler(req, res) {
-  // ✅ Allow requests from your GitHub Pages domain
+  // ✅ CORS headers
   res.setHeader('Access-Control-Allow-Origin', 'https://tahsinhshan.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // ✅ Handle preflight CORS request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // (the rest of your code continues below...)
-
-
-  // 🚨 Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST requests allowed' });
   }
@@ -51,7 +46,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: data.error || 'Something went wrong with OpenRouter' });
     }
 
-    return res.status(200).json({ message: data.choices?.[0]?.message?.content || 'No response' });
+    return res.status(200).json({ reply: data.choices?.[0]?.message?.content || 'No response' });
 
   } catch (error) {
     console.error("❌ Server error:", error);
